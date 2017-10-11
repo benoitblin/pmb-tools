@@ -1,23 +1,21 @@
 # pmb-tools
 Set of tools to generate XML files to import in open-source PMB site
 
-1. Import bulletins and articles in XLSX file
+1. Import bulletins and articles from XLSX file
+---------------------------------------------
 
-How to use :
-import sys
+*How to use :*
+
+```python
 from model import Periodique
 from xls_to_model import XlsConverter
 from model_to_xml import XmlConverter
 
-# Load file
-if len(sys.argv) < 2:
-	sys.exit("Nom de fichier requis")
-filepath = sys.argv[1]
 xls = XlsConverter()
 try:
-	xls.load(filepath)
+	xls.load("source.xlsx")
 except Exception as e:
-	sys.exit("ERREUR : " + str(e))
+	print("ERREUR : " + str(e))
 
 # Define periodique
 per = Periodique()
@@ -27,9 +25,8 @@ xls.setPeriodique(per)
 
 # Parsing
 articles = xls.activeSheetToModel()
-if len(articles) == 0:
-    sys.exit("Aucun article détecté dans le fichier")
 
+# Produce XML
 xml = XmlConverter()
-exportfile = "pif-gadget_" + datetime.datetime.now().strftime("%Y-%b-%d-%I-%M-%S") + ".xml"
-xml.loadModelToFile(articles, exportfile)
+xml.loadModelToFile(articles, "import-pif-gadget.xml")
+```
